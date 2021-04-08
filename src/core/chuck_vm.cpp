@@ -1189,7 +1189,7 @@ struct Chuck_Set_Global_Int_Request
 struct Chuck_Get_Global_Int_Request
 {
     std::string name;
-    void (* fp)(t_CKINT);
+    void (* fp)(const char *, t_CKINT);
     // constructor
     Chuck_Get_Global_Int_Request() : fp(NULL) { }
 };
@@ -1219,7 +1219,7 @@ struct Chuck_Set_Global_Float_Request
 struct Chuck_Get_Global_Float_Request
 {
     std::string name;
-    void (* fp)(t_CKFLOAT);
+    void (* fp)(const char *, t_CKFLOAT);
     // constructor
     Chuck_Get_Global_Float_Request() : fp(NULL) { }
 };
@@ -1251,7 +1251,7 @@ struct Chuck_Listen_For_Global_Event_Request
     std::string name;
     t_CKBOOL listen_forever;
     t_CKBOOL deregister;
-    void (* callback)(void);
+    void (* callback)(const char *);
     // constructor
     Chuck_Listen_For_Global_Event_Request() : listen_forever(FALSE),
         deregister(FALSE), callback(NULL) { }
@@ -1282,7 +1282,7 @@ struct Chuck_Set_Global_String_Request
 struct Chuck_Get_Global_String_Request
 {
     std::string name;
-    void (* fp)(const char *);
+    void (* fp)(const char *, const char *);
     // constructor
     Chuck_Get_Global_String_Request() : fp(NULL) { }
 };
@@ -1312,7 +1312,7 @@ struct Chuck_Set_Global_Int_Array_Request
 struct Chuck_Get_Global_Int_Array_Request
 {
     std::string name;
-    void (* callback)(t_CKINT[], t_CKUINT);
+    void (* callback)(const char *, t_CKINT[], t_CKUINT);
     // constructor
     Chuck_Get_Global_Int_Array_Request() : callback(NULL) { }
 };
@@ -1344,7 +1344,7 @@ struct Chuck_Get_Global_Int_Array_Value_Request
 {
     std::string name;
     t_CKUINT index;
-    void (* callback)(t_CKINT);
+    void (* callback)(const char *, t_CKINT);
     // constructor
     Chuck_Get_Global_Int_Array_Value_Request() : index(-1), callback(NULL) { }
 };
@@ -1376,7 +1376,7 @@ struct Chuck_Get_Global_Associative_Int_Array_Value_Request
 {
     std::string name;
     std::string key;
-    void (* callback)(t_CKINT);
+    void (* callback)(const char *, t_CKINT);
     // constructor
     Chuck_Get_Global_Associative_Int_Array_Value_Request() : callback(NULL) { }
 };
@@ -1406,7 +1406,7 @@ struct Chuck_Set_Global_Float_Array_Request
 struct Chuck_Get_Global_Float_Array_Request
 {
     std::string name;
-    void (* callback)(t_CKFLOAT[], t_CKUINT);
+    void (* callback)(const char *, t_CKFLOAT[], t_CKUINT);
     // constructor
     Chuck_Get_Global_Float_Array_Request() : callback(NULL) { }
 };
@@ -1438,7 +1438,7 @@ struct Chuck_Get_Global_Float_Array_Value_Request
 {
     std::string name;
     t_CKUINT index;
-    void (* callback)(t_CKFLOAT);
+    void (* callback)(const char *, t_CKFLOAT);
     // constructor
     Chuck_Get_Global_Float_Array_Value_Request() : index(-1), callback(NULL) { }
 };
@@ -1470,7 +1470,7 @@ struct Chuck_Get_Global_Associative_Float_Array_Value_Request
 {
     std::string name;
     std::string key;
-    void (* callback)(t_CKFLOAT);
+    void (* callback)(const char *, t_CKFLOAT);
     // constructor
     Chuck_Get_Global_Associative_Float_Array_Value_Request() : callback(NULL) { }
 };
@@ -1595,7 +1595,7 @@ struct Chuck_Global_Array_Container
 // desc: get a global int by name
 //-----------------------------------------------------------------------------
 t_CKBOOL Chuck_VM::get_global_int( std::string name,
-                                     void (* callback)(t_CKINT) )
+                                     void (* callback)(const char *, t_CKINT) )
 {
     Chuck_Get_Global_Int_Request * get_int_message =
         new Chuck_Get_Global_Int_Request;
@@ -1686,7 +1686,7 @@ t_CKINT * Chuck_VM::get_ptr_to_global_int( std::string name )
 // desc: get a global float by name
 //-----------------------------------------------------------------------------
 t_CKBOOL Chuck_VM::get_global_float( std::string name,
-                                       void (* callback)(t_CKFLOAT) )
+                                       void (* callback)(const char *, t_CKFLOAT) )
 {
     Chuck_Get_Global_Float_Request * get_float_message =
         new Chuck_Get_Global_Float_Request;
@@ -1777,7 +1777,7 @@ t_CKFLOAT * Chuck_VM::get_ptr_to_global_float( std::string name )
 // desc: get a global string by name
 //-----------------------------------------------------------------------------
 t_CKBOOL Chuck_VM::get_global_string( std::string name,
-        void (* callback)(const char *) )
+        void (* callback)(const char*, const char *) )
 {
     Chuck_Get_Global_String_Request * get_string_message =
         new Chuck_Get_Global_String_Request;
@@ -1923,7 +1923,7 @@ t_CKBOOL Chuck_VM::broadcast_global_event( std::string name )
 // desc: listen for an Event by name
 //-----------------------------------------------------------------------------
 t_CKBOOL Chuck_VM::listen_for_global_event( std::string name,
-    void (* callback)(void), t_CKBOOL listen_forever )
+    void (* callback)(const char *), t_CKBOOL listen_forever )
 {
     Chuck_Listen_For_Global_Event_Request * listen_event_message =
         new Chuck_Listen_For_Global_Event_Request;
@@ -1951,7 +1951,7 @@ t_CKBOOL Chuck_VM::listen_for_global_event( std::string name,
 // desc: listen for an Event by name
 //-----------------------------------------------------------------------------
 t_CKBOOL Chuck_VM::stop_listening_for_global_event( std::string name,
-    void (* callback)(void) )
+    void (* callback)(const char *) )
 {
     Chuck_Listen_For_Global_Event_Request * listen_event_message =
         new Chuck_Listen_For_Global_Event_Request;
@@ -2166,7 +2166,7 @@ t_CKBOOL Chuck_VM::set_global_int_array( std::string name, t_CKINT arrayValues[]
 // name: get_global_int_array()
 // desc: tell the vm to get an entire int array
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_VM::get_global_int_array( std::string name, void (* callback)(t_CKINT[], t_CKUINT))
+t_CKBOOL Chuck_VM::get_global_int_array( std::string name, void (* callback)(const char *, t_CKINT[], t_CKUINT))
 {
     Chuck_Get_Global_Int_Array_Request * message =
         new Chuck_Get_Global_Int_Array_Request;
@@ -2217,7 +2217,7 @@ t_CKBOOL Chuck_VM::set_global_int_array_value( std::string name, t_CKUINT index,
 // name: get_global_int_array_value()
 // desc: tell the vm to get one value of an int array by index
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_VM::get_global_int_array_value( std::string name, t_CKUINT index, void (* callback)(t_CKINT) )
+t_CKBOOL Chuck_VM::get_global_int_array_value( std::string name, t_CKUINT index, void (* callback)(const char *, t_CKINT) )
 {
     Chuck_Get_Global_Int_Array_Value_Request * message =
         new Chuck_Get_Global_Int_Array_Value_Request;
@@ -2269,7 +2269,7 @@ t_CKBOOL Chuck_VM::set_global_associative_int_array_value( std::string name, std
 // name: get_global_associative_int_array_value()
 // desc: tell the vm to get one value of an associative array by string key
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_VM::get_global_associative_int_array_value( std::string name, std::string key, void (* callback)(t_CKINT) )
+t_CKBOOL Chuck_VM::get_global_associative_int_array_value( std::string name, std::string key, void (* callback)(const char *, t_CKINT) )
 {
     Chuck_Get_Global_Associative_Int_Array_Value_Request * message =
         new Chuck_Get_Global_Associative_Int_Array_Value_Request;
@@ -2324,7 +2324,7 @@ t_CKBOOL Chuck_VM::set_global_float_array( std::string name, t_CKFLOAT arrayValu
 // name: get_global_float_array()
 // desc: tell the vm to get an entire float array
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_VM::get_global_float_array( std::string name, void (* callback)(t_CKFLOAT[], t_CKUINT))
+t_CKBOOL Chuck_VM::get_global_float_array( std::string name, void (* callback)(const char *, t_CKFLOAT[], t_CKUINT))
 {
     Chuck_Get_Global_Float_Array_Request * message =
         new Chuck_Get_Global_Float_Array_Request;
@@ -2375,7 +2375,7 @@ t_CKBOOL Chuck_VM::set_global_float_array_value( std::string name, t_CKUINT inde
 // name: get_global_float_array_value()
 // desc: tell the vm to get one value of an float array by index
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_VM::get_global_float_array_value( std::string name, t_CKUINT index, void (* callback)(t_CKFLOAT) )
+t_CKBOOL Chuck_VM::get_global_float_array_value( std::string name, t_CKUINT index, void (* callback)(const char *, t_CKFLOAT) )
 {
     Chuck_Get_Global_Float_Array_Value_Request * message =
         new Chuck_Get_Global_Float_Array_Value_Request;
@@ -2427,7 +2427,7 @@ t_CKBOOL Chuck_VM::set_global_associative_float_array_value( std::string name, s
 // name: get_global_associative_float_array_value()
 // desc: tell the vm to get one value of an associative array by string key
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_VM::get_global_associative_float_array_value( std::string name, std::string key, void (* callback)(t_CKFLOAT) )
+t_CKBOOL Chuck_VM::get_global_associative_float_array_value( std::string name, std::string key, void (* callback)(const char*, t_CKFLOAT) )
 {
     Chuck_Get_Global_Associative_Float_Array_Value_Request * message =
         new Chuck_Get_Global_Associative_Float_Array_Value_Request;
@@ -2704,7 +2704,7 @@ void Chuck_VM::handle_global_queue_messages()
                     // ensure the value exists
                     init_global_int( message.getIntRequest->name );
                     // call the callback with the value
-                    message.getIntRequest->fp( m_global_ints[message.getIntRequest->name]->val );
+                    message.getIntRequest->fp(message.getIntRequest->name.c_str(), m_global_ints[message.getIntRequest->name]->val );
                 }
                 // clean up request storage
                 delete message.getIntRequest;
@@ -2726,7 +2726,7 @@ void Chuck_VM::handle_global_queue_messages()
                     // ensure value exists
                     init_global_float( message.getFloatRequest->name );
                     // call callback with float
-                    message.getFloatRequest->fp( m_global_floats[message.getFloatRequest->name]->val );
+                    message.getFloatRequest->fp(message.getFloatRequest->name.c_str(), m_global_floats[message.getFloatRequest->name]->val );
                 }
                 // clean up request storage
                 delete message.getFloatRequest;
@@ -2748,7 +2748,7 @@ void Chuck_VM::handle_global_queue_messages()
                     // ensure value exists
                     init_global_string( message.getStringRequest->name );
                     // call callback with string
-                    message.getStringRequest->fp( m_global_strings[message.getStringRequest->name]->val->c_str() );
+                    message.getStringRequest->fp(message.getStringRequest->name.c_str(), m_global_strings[message.getStringRequest->name]->val->c_str() );
                 }
                 // clean up request storage
                 delete message.getStringRequest;
@@ -2892,7 +2892,7 @@ void Chuck_VM::handle_global_queue_messages()
                         {
                             Chuck_Array4 * intArray = (Chuck_Array4 *) array;
                             // TODO: why is m_vector a vector of unsigned ints...??
-                            request->callback(
+                            request->callback(request->name.c_str(),
                                 (t_CKINT *) &(intArray->m_vector[0]),
                                 intArray->size()
                             );
@@ -2977,7 +2977,7 @@ void Chuck_VM::handle_global_queue_messages()
                             // TODO why is it unsigned int storage?
                             t_CKUINT result = 0;
                             intArray->get( request->index, &result );
-                            request->callback( result );
+                            request->callback(request->name.c_str(), result );
                         }
                     }
                     else
@@ -3056,7 +3056,7 @@ void Chuck_VM::handle_global_queue_messages()
                             // TODO why is it unsigned int storage?
                             t_CKUINT result = 0;
                             intArray->get( request->key, &result );
-                            request->callback( result );
+                            request->callback(request->name.c_str(), result );
                         }
                     }
                     else
@@ -3137,7 +3137,7 @@ void Chuck_VM::handle_global_queue_messages()
                             request->callback != NULL )
                         {
                             Chuck_Array8 * floatArray = (Chuck_Array8 *) array;
-                            request->callback(
+                            request->callback(request->name.c_str(),
                                 &(floatArray->m_vector[0]),
                                 floatArray->size()
                             );
@@ -3221,7 +3221,7 @@ void Chuck_VM::handle_global_queue_messages()
                             Chuck_Array8 * floatArray = (Chuck_Array8 *) array;
                             t_CKFLOAT result = 0;
                             floatArray->get( request->index, &result );
-                            request->callback( result );
+                            request->callback(request->name.c_str(), result );
                         }
                     }
                     else
@@ -3299,7 +3299,7 @@ void Chuck_VM::handle_global_queue_messages()
                             Chuck_Array8 * floatArray = (Chuck_Array8 *) array;
                             t_CKFLOAT result = 0;
                             floatArray->get( request->key, &result );
-                            request->callback( result );
+                            request->callback(request->name.c_str(), result );
                         }
                     }
                     else

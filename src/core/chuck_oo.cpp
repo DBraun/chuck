@@ -2050,7 +2050,7 @@ t_CKBOOL Chuck_Event::remove( Chuck_VM_Shred * shred )
 // name: global_listen()
 // desc: register a callback to a global event
 //-----------------------------------------------------------------------------
-void Chuck_Event::global_listen( void (* cb)(void),
+void Chuck_Event::global_listen( void (* cb)(const char*),
     t_CKBOOL listen_forever )
 {
     // storage
@@ -2071,7 +2071,7 @@ void Chuck_Event::global_listen( void (* cb)(void),
 // name: remove_listen()
 // desc: deregister a callback to a global event
 //-----------------------------------------------------------------------------
-t_CKBOOL Chuck_Event::remove_listen( void (* cb)(void) )
+t_CKBOOL Chuck_Event::remove_listen( void (* cb)(const char *) )
 {
     std::queue<Chuck_Global_Event_Listener> temp;
     t_CKBOOL removed = FALSE;
@@ -2125,12 +2125,12 @@ void Chuck_Event::signal_global()
         // call callback
         if( listener.callback != NULL )
         {
-            listener.callback();
+            listener.callback(listener.name.c_str());
         }
         // if call forever, add back to m_global_queue
         if( listener.listen_forever )
         {
-            m_global_queue.push( listener );
+            m_global_queue.push(listener);
         }
     }
     
@@ -2158,7 +2158,7 @@ void Chuck_Event::broadcast_global()
         // call callback
         if( listener.callback != NULL )
         {
-            listener.callback();
+            listener.callback(listener.name.c_str());
         }
         // if call forever, add back to m_global_queue
         if( listener.listen_forever )

@@ -427,9 +427,10 @@ public:
 //-----------------------------------------------------------------------------
 struct Chuck_Global_Event_Listener
 {
-    void (* callback)(void);
+    void (* callback)(const char *);
+    std::string name;
     t_CKBOOL listen_forever;
-    Chuck_Global_Event_Listener() : callback(NULL), listen_forever(FALSE) {};
+    Chuck_Global_Event_Listener() : name(""), callback(NULL), listen_forever(FALSE) {};
 };
 
 
@@ -448,8 +449,8 @@ public:
     t_CKBOOL remove( Chuck_VM_Shred * shred );
     void signal_global();
     void broadcast_global();
-    void global_listen( void (* cb)(void), t_CKBOOL listen_forever );
-    t_CKBOOL remove_listen( void (* cb)(void) );
+    void global_listen( void (* cb)(const char *), t_CKBOOL listen_forever );
+    t_CKBOOL remove_listen( void (* cb)(const char *) );
 
 public: // internal
     // added 1.3.0.0: queue_broadcast now takes event_buffer

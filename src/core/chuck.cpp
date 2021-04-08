@@ -912,7 +912,7 @@ t_CKBOOL ChucK::setGlobalInt( const char * name, t_CKINT val )
 // name: getGlobalInt()
 // desc: send a message to get the value of a global int via callback
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::getGlobalInt( const char * name, void (* callback)(t_CKINT) )
+t_CKBOOL ChucK::getGlobalInt( const char * name, void (* callback)(const char *, t_CKINT) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_int( std::string( name ), callback );
@@ -938,7 +938,7 @@ t_CKBOOL ChucK::setGlobalFloat( const char * name, t_CKFLOAT val )
 // name: getGlobalFloat()
 // desc: send a message to get the value of a global float via callback
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::getGlobalFloat( const char * name, void (* callback)(t_CKFLOAT) )
+t_CKBOOL ChucK::getGlobalFloat( const char * name, void (* callback)(const char *, t_CKFLOAT) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_float( std::string( name ), callback );
@@ -966,7 +966,7 @@ t_CKBOOL ChucK::setGlobalString( const char * name, const char * val )
 // desc: send a message to get the value of a global string via callback
 //-----------------------------------------------------------------------------
 t_CKBOOL ChucK::getGlobalString( const char * name,
-    void (* callback)( const char * ) )
+    void (* callback)(const char*, const char * ) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_string( std::string( name ), callback );
@@ -1005,7 +1005,7 @@ t_CKBOOL ChucK::broadcastGlobalEvent( const char * name )
 // name: listenForGlobalEvent()
 // desc: send a message to broadcast a global event
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::listenForGlobalEvent( const char * name, void (* callback)(void),
+t_CKBOOL ChucK::listenForGlobalEvent( const char * name, void (* callback)(const char*),
     t_CKBOOL listen_forever )
 {
     if( !m_carrier->vm->running() ) return FALSE;
@@ -1021,7 +1021,7 @@ t_CKBOOL ChucK::listenForGlobalEvent( const char * name, void (* callback)(void)
 // desc: send a message to broadcast a global event
 //-----------------------------------------------------------------------------
 t_CKBOOL ChucK::stopListeningForGlobalEvent( const char * name,
-    void (* callback)(void) )
+    void (* callback)(const char*) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->stop_listening_for_global_event(
@@ -1065,7 +1065,7 @@ t_CKBOOL ChucK::setGlobalIntArray( const char * name,
 // desc: send a message to get a global int array with a callback
 //-----------------------------------------------------------------------------
 t_CKBOOL ChucK::getGlobalIntArray( const char * name,
-    void (* callback)(t_CKINT[], t_CKUINT))
+    void (* callback)(const char*, t_CKINT[], t_CKUINT))
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_int_array(
@@ -1093,7 +1093,7 @@ t_CKBOOL ChucK::setGlobalIntArrayValue( const char * name, t_CKUINT index, t_CKI
 // name: getGlobalIntArrayValue()
 // desc: send a message to get a global int array value by index
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::getGlobalIntArrayValue( const char * name, t_CKUINT index, void (* callback)(t_CKINT) )
+t_CKBOOL ChucK::getGlobalIntArrayValue( const char * name, t_CKUINT index, void (* callback)(const char*, t_CKINT) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_int_array_value(
@@ -1121,7 +1121,7 @@ t_CKBOOL ChucK::setGlobalAssociativeIntArrayValue( const char * name, char * key
 // name: getGlobalAssociativeIntArrayValue()
 // desc: send a message to get a global int array value by string key
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::getGlobalAssociativeIntArrayValue( const char * name, char * key, void (* callback)(t_CKINT) )
+t_CKBOOL ChucK::getGlobalAssociativeIntArrayValue( const char * name, char * key, void (* callback)(const char*, t_CKINT) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_associative_int_array_value(
@@ -1151,7 +1151,7 @@ t_CKBOOL ChucK::setGlobalFloatArray( const char * name,
 // desc: send a message to get a global float array with a callback
 //-----------------------------------------------------------------------------
 t_CKBOOL ChucK::getGlobalFloatArray( const char * name,
-    void (* callback)(t_CKFLOAT[], t_CKUINT))
+    void (* callback)(const char*, t_CKFLOAT[], t_CKUINT))
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_float_array(
@@ -1179,7 +1179,7 @@ t_CKBOOL ChucK::setGlobalFloatArrayValue( const char * name, t_CKUINT index, t_C
 // name: getGlobalFloatArrayValue()
 // desc: send a message to get a global float array value by index
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::getGlobalFloatArrayValue( const char * name, t_CKUINT index, void (* callback)(t_CKFLOAT) )
+t_CKBOOL ChucK::getGlobalFloatArrayValue( const char * name, t_CKUINT index, void (* callback)(const char*, t_CKFLOAT) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_float_array_value(
@@ -1207,7 +1207,7 @@ t_CKBOOL ChucK::setGlobalAssociativeFloatArrayValue( const char * name, char * k
 // name: getGlobalAssociativeFloatArrayValue()
 // desc: send a message to get a global float array value by string key
 //-----------------------------------------------------------------------------
-t_CKBOOL ChucK::getGlobalAssociativeFloatArrayValue( const char * name, char * key, void (* callback)(t_CKFLOAT) )
+t_CKBOOL ChucK::getGlobalAssociativeFloatArrayValue( const char * name, char * key, void (* callback)(const char*, t_CKFLOAT) )
 {
     if( !m_carrier->vm->running() ) return FALSE;
     return m_carrier->vm->get_global_associative_float_array_value(
